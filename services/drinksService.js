@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { drinks } = require("./models");
 
 mongoose.Promise = global.Promise;
-const uri = "mongodb+srv://public:public@clusteraxel.u9b2e.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@clusteraxel.u9b2e.mongodb.net/?retryWrites=true&w=majority`;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: "cook"});
 console.log("Database Connected!");
 
