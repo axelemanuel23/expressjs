@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/axelemanuel23/axelemanuel23.github.io-backend/issues"
   },
-  "homepage": "https://github.com/axelemanuel23/axelemanuel23.github.io-backend#readme"
+  "homepage": "https://github.com/axelemanuel23/axelemanuel23.github.io-backend#readme",
+  "keywords": [
+    "JavaScript",
+    "NodeJS",
+    "MongoDB"
+  ]
 }
