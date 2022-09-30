@@ -1,140 +1,114 @@
-const mongoose = require('mongoose');
+const boom = require("@hapi/boom");
 const { meals } = require("./models");
-
-mongoose.Promise = global.Promise;
-const uri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@clusteraxel.u9b2e.mongodb.net/?retryWrites=true&w=majority`;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: "cook"});
-console.log("Database Connected!");
-
-
 class MealsService {
-    create(data, res){
-        const newMeal = new meals(data);
+    //Create One
+    async create(req, res, next){
         try{
-            newMeal.save();
-            res.status(201)
-            .json({
-                message: "Succeed",
-                data: newMeal,
-            });
-        }catch{
-            res.status(500)
-            .json({
-                message: "Error"
-            });
+            const exist = await meals.find({name: req.body.name});
+            const newMeal = new meals(req.body);
+            const match = exist.filter((item) => item.name.toLowerCase() == newMeal.name.toLowerCase());
+            if(match!=""){
+                throw boom.conflict("Already Exist", match);
+            }else{
+                newMeal.save();
+                res.status(201)
+                    .json({
+                        message: "Created",
+                        data: newMeal,
+                    });
+            }
+        }catch(err){
+            err.serviceError = true;
+            next(err)
         }
     }
-
-    async find(res){
+    //Get All
+    async find(req, res, next){
         try{
             const list = await meals.find();
             res.status(200)
-            .json({
-                message: "Succeed",
-                data: list,
-            });
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
-        }
-    }
-
-    async findOne(id, res){
-        try{
-            const meal = await meals.findById(id);
-            if(meal != null){
-                res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: meal,
-                });
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: meal,
-                });
-            }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
-        }
-    }
-
-    
-    async update(id, changes, res){
-        try{
-            const meal = await meals.findByIdAndUpdate(id, changes);
-            if(meal != null){
-                res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: meal,
-                })
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: meal,
-                });
-            }            
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            })
-        }
-    }
-    
-    async delete(id, res){
-        try{
-            const meal = await meals.findOneAndDelete({_id: id});
-            if(meal != null){
-                res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: meal
-                });
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: meal,
-                });
-            }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
-        }
-    }
-    
-    async filter(filter, res){
-        try{
-            const list = await meals.find(filter);
-            if(list != null){
-                res.status(200)
                 .json({
                     message: "Succeed",
                     data: list,
                 });
-            }else{
-                res.status(404)
+        }catch(err){
+            err.serviceError = true,
+            next(err)
+        }
+    }
+
+    //Get One by Id
+    async findOne(req, res, next){
+        try{
+            const meal = await meals.findById(req.params.id);
+            if(meal == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
                 .json({
-                    message: "Not found",
+                    message: "Succeed",
                     data: meal,
                 });
+        }catch(err){
+            err.serviceError = true;
+            next(err);
+        }
+    }
+
+
+    //Update One
+    async update(req, res, next){
+        try{
+            const meal = await meals.findByIdAndUpdate(req.params.id, req.body);
+            if(meal == null){
+                throw boom.notFound("Not found");
             }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
+            res.status(200)
+                .json({
+                    message: "Succeed",
+                    data: meal,
+                });     
+        }catch(err){
+            err.serviceError = true;
+            next(err)
+        }
+    }
+    
+    //Delete One
+
+    async delete(req, res, next){
+        try{
+            const meal = await meals.findOneAndDelete({_id: req.params.id});
+            if(meal == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
+                .json({
+                    message: "Deleted",
+                    data: meal
+                });
+        }catch(err){
+            err.serviceError = true;
+            next(err)
+        }
+    }
+    
+    //Filter
+
+    async filter(req, res, next){
+        try{
+            const list = await meals.find(req.query);
+            if(list == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
+                .json({
+                    message: "Succeed",
+                    data: list,
+                })
+        }catch(err){
+            err.serviceError = true;
+            next(err)
         }
     }
 }

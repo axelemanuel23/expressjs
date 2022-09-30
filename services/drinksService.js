@@ -1,140 +1,98 @@
-const mongoose = require('mongoose');
+const boom = require("@hapi/boom");
 const { drinks } = require("./models");
-
-mongoose.Promise = global.Promise;
-const uri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@clusteraxel.u9b2e.mongodb.net/?retryWrites=true&w=majority`;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: "cook"});
-console.log("Database Connected!");
-
-
 class DrinksService {
-    create(data, res){
-        const newDrink = new drinks(data);
+    create(req, res, next){
         try{
+            const newDrink = new drinks(req.body);
             newDrink.save();
             res.status(201)
-            .json({
-                message: "Succeed",
-                data: newDrink,
-            });
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
+                .json({
+                    message: "Created",
+                    data: newDrink,
+                });
+        }catch(err){
+            next(err)
         }
     }
 
-    async find(res){
+    async find(req, res, next){
         try{
             const list = await drinks.find();
-            res.status(200)
-            .json({
-                message: "Succeed",
-                data: list,
-            });
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
-        }
-    }
-
-    async findOne(id, res){
-        try{
-            const drink = await drinks.findById(id);
-            if(drink != null){
-                res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: drink,
-                });
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: drink,
-                });
+            if(list == null){
+                boom.notFound("Not Found");
             }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
+            res.status(200)
+                .json({
+                    message: "Succeed",
+                    data: list,
+                });
+        }catch(err){
+            next(err)
+        }
+    }
+
+    async findOne(req, res, next){
+        try{
+            const drink= await drinks.findById(req.params.id);
+            if(drink == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
+                .json({
+                    message: "Succeed",
+                    data: drink,
+                });
+        }catch(err){
+            next(err)
         }
     }
 
     
-    async update(id, changes, res){
+    async update(req, res, next){
         try{
-            const drink = await drinks.findByIdAndUpdate(id, changes);
-            if(drink != null){
-                res.status(200)
+            const drink = await drinks.findByIdAndUpdate(req.params.id, req.body);
+            if(drink == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
                 .json({
                     message: "Succeed",
                     data: drink,
-                })
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: drink,
-                });
-            }            
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            })
+                });     
+        }catch(err){
+            next(err)
         }
     }
     
-    async delete(id, res){
+    async delete(req, res, next){
         try{
-            const drink = await drinks.findOneAndDelete({_id: id});
-            if(drink != null){
-                res.status(200)
+            const drink = await drinks.findOneAndDelete({_id: req.params.id});
+            if(drink == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
                 .json({
-                    message: "Succeed",
+                    message: "Deleted",
                     data: drink
                 });
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: drink,
-                });
-            }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
+        }catch(err){
+            next(err)
         }
     }
     
-    async filter(filter, res){
+    async filter(req, res, next){
         try{
-            const list = await drinks.find(filter);
-            if(list != null){
-                res.status(200)
+            const list = await drinks.find(req.query);
+            if(list == null){
+                throw boom.notFound("Not found");
+            }
+            res.status(200)
                 .json({
                     message: "Succeed",
                     data: list,
-                });
-            }else{
-                res.status(404)
-                .json({
-                    message: "Not found",
-                    data: list,
-                });
-            }
-        }catch{
-            res.status(401)
-            .json({
-                message: "Error"
-            });
+                })
+        }catch(err){
+            next(err)
         }
     }
 }
