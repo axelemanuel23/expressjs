@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const { config } = require("../configs/config");
 
 mongoose.Promise = global.Promise;
 
-const dbUser = process.env.DBUSER;
-const dbPass = process.env.DBPASS;
-const dbCluster = process.env.DBCLUSTER;
+const dbUser = encodeURIComponent(config.dbUser);
+const dbPass = encodeURIComponent(config.dbPass);
+const dbCluster = config.dbCluster;
+
 const uri = `mongodb+srv://${dbUser}:${dbPass}@${dbCluster}/?retryWrites=true&w=majority`;
 
 async function connection(dbName){
