@@ -4,18 +4,18 @@ class MealsService {
     //Create One
     async create(req, res, next){
         try{
-            const exist = await todos.find({name: req.body.text});
+            const exist = await todos.find({text: req.body.text});
             const newTodo = new todos(req.body);
             const match = exist.filter((todo) => todo.text.toLowerCase() == newTodo.text.toLowerCase());
-            if(match!=[]){
-                throw boom.conflict("Already Exist", match);
-            }else{
-                newTodo.save();
+            if(!match.length>=1){
+               newTodo.save();
                 res.status(201)
                     .json({
                         message: "Created",
                         data: newTodo,
-                    });
+                    }); 
+            }else{
+                throw boom.conflict("Already Exist", match);
             }
         }catch(err){
             err.serviceError = true;
@@ -60,7 +60,7 @@ class MealsService {
     async update(req, res, next){
         try{
             const todo = await todos.findByIdAndUpdate(req.params.id, req.body);
-            if(todo == []){
+            if(todo.length==0){
                 throw boom.notFound("Not found");
             }
             res.status(200)
