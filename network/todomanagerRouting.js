@@ -10,17 +10,17 @@ router.get("/", (req, res, next) => {
      service.find(req, res, next);
 })
 
-router.get("/filter", (req, res, next) => {
-    service.filter(req, res, next);
-})
+// router.get("/filter", (req, res, next) => {
+//     service.filter(req, res, next);
+// })
 
 router.post("/", (req, res, next) => {
     service.create(req, res, next);
 })
 
-router.get("/:id", (req, res, next) => {
-    service.findOne(req, res, next);
-})
+// router.get("/:id", (req, res, next) => {
+//     service.findOne(req, res, next);
+// })
 
 // router.put("/:id", (req, res) =>{
 //     const { id } = req.params;

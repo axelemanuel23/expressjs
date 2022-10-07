@@ -1,20 +1,20 @@
 const boom = require("@hapi/boom");
-const { meals } = require("./models");
+const { todos } = require("./models");
 class MealsService {
     //Create One
     async create(req, res, next){
         try{
-            const exist = await meals.find({name: req.body.name});
-            const newMeal = new meals(req.body);
-            const match = exist.filter((item) => item.name.toLowerCase() == newMeal.name.toLowerCase());
-            if(match!=""){
+            const exist = await todos.find({name: req.body.text});
+            const newTodo = new todos(req.body);
+            const match = exist.filter((todo) => todo.text.toLowerCase() == newTodo.text.toLowerCase());
+            if(match!=[]){
                 throw boom.conflict("Already Exist", match);
             }else{
-                newMeal.save();
+                newTodo.save();
                 res.status(201)
                     .json({
                         message: "Created",
-                        data: newMeal,
+                        data: newTodo,
                     });
             }
         }catch(err){
@@ -25,7 +25,7 @@ class MealsService {
     //Get All
     async find(req, res, next){
         try{
-            const list = await meals.find();
+            const list = await todos.find();
             res.status(200)
                 .json({
                     message: "Succeed",
@@ -38,35 +38,35 @@ class MealsService {
     }
 
     //Get One by Id
-    async findOne(req, res, next){
-        try{
-            const meal = await meals.findById(req.params.id);
-            if(meal == null){
-                throw boom.notFound("Not found");
-            }
-            res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: meal,
-                });
-        }catch(err){
-            err.serviceError = true;
-            next(err);
-        }
-    }
+    // async findOne(req, res, next){
+    //     try{
+    //         const todo = await todos.findById(req.params.id);
+    //         if(todo == []){
+    //             throw boom.notFound("Not found");
+    //         }
+    //         res.status(200)
+    //             .json({
+    //                 message: "Succeed",
+    //                 data: todo,
+    //             });
+    //     }catch(err){
+    //         err.serviceError = true;
+    //         next(err);
+    //     }
+    // }
 
 
     //Update One
     async update(req, res, next){
         try{
-            const meal = await meals.findByIdAndUpdate(req.params.id, req.body);
-            if(meal == null){
+            const todo = await todos.findByIdAndUpdate(req.params.id, req.body);
+            if(todo == []){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: meal,
+                    data: todo,
                 });     
         }catch(err){
             err.serviceError = true;
@@ -78,14 +78,14 @@ class MealsService {
 
     async delete(req, res, next){
         try{
-            const meal = await meals.findOneAndDelete({_id: req.params.id});
-            if(meal == null){
+            const todo = await todos.findOneAndDelete({_id: req.params.id});
+            if(todo == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Deleted",
-                    data: meal
+                    data: todo
                 });
         }catch(err){
             err.serviceError = true;
@@ -95,22 +95,22 @@ class MealsService {
     
     //Filter
 
-    async filter(req, res, next){
-        try{
-            const list = await meals.find(req.query);
-            if(list == null){
-                throw boom.notFound("Not found");
-            }
-            res.status(200)
-                .json({
-                    message: "Succeed",
-                    data: list,
-                })
-        }catch(err){
-            err.serviceError = true;
-            next(err)
-        }
-    }
+    // async filter(req, res, next){
+    //     try{
+    //         const list = await todos.find(req.query);
+    //         if(list == null){
+    //             throw boom.notFound("Not found");
+    //         }
+    //         res.status(200)
+    //             .json({
+    //                 message: "Succeed",
+    //                 data: list,
+    //             })
+    //     }catch(err){
+    //         err.serviceError = true;
+    //         next(err)
+    //     }
+    // }
 }
 
 module.exports = MealsService;
