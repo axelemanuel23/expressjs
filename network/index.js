@@ -1,6 +1,6 @@
 const express = require("express");
 const mealsRouter = require("./mealsRouting");
-const drinksRouter = require("./drinksRouting");
+// const drinksRouter = require("./drinksRouting");
 const todomanagerRouter = require("./todomanagerRouting");
 const { authorizationHandler } = require("../middlewares/authHandler");
 

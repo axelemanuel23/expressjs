@@ -1,7 +1,7 @@
 //EndPoint /todomanager
 
 const express = require("express");
-const ToDoService = require("../services/ToDoService");
+const ToDoService = require("../services/todoService");
 
 const router = express.Router();
 const service = new ToDoService();
