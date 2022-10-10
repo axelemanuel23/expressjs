@@ -1,11 +1,13 @@
 //EndPoint /todomanager
 
 const express = require("express");
-const ToDoService = require("../services/todoService");
+const cors = require("cors");
+const { ToDoService } = require("../services/todoService");
 
 const router = express.Router();
 const service = new ToDoService();
-
+const whitelist =["https://localhost:3000"];
+router.use(cors({origin: whitelist}));
 router.get("/", (req, res, next) => {
      service.find(req, res, next);
 })

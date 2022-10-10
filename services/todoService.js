@@ -1,6 +1,6 @@
 const boom = require("@hapi/boom");
 const { todos } = require("./models");
-class MealsService {
+class ToDoService {
     //Create One
     async create(req, res, next){
         try{
@@ -73,6 +73,10 @@ class MealsService {
             next(err)
         }
     }
+
+    //Complete
+
+    //Uncomplete
     
     //Delete One
 
@@ -113,4 +117,4 @@ class MealsService {
     // }
 }
 
-module.exports = MealsService;
+module.exports = { ToDoService };
