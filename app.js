@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT;
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["http://localhost:3000", "https://sensational-florentine-6e965d.netlify.app/"];
 app.use(cors({origin: whitelist}));
 
 app.use(express.json());
