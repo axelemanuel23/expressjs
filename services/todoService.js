@@ -65,8 +65,11 @@ class ToDoService {
             }
             res.status(200)
                 .json({
-                    message: "Succeed",
-                    data: todo,
+                    message: "Updated",
+                    data: {
+                        old: todo,
+                        new: req.body
+                    }
                 });     
         }catch(err){
             err.serviceError = true;
