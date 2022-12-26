@@ -1,2 +1,6 @@
-# axelemanuel23.github.io-backend
-API que responde a peticiones de diferentes dominios habilitados como parte de mi aprendizaje
+# Server build with Nodejs
+
+This Server interact with a specific origin.
+
+You can check this code running in Railway:
+https://axelemanuel23githubio-backend-production.up.railway.app/
