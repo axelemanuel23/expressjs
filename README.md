@@ -1,4 +1,4 @@
-# Server build with express.js
+# Server built with express.js
 
 This Server interact with a specific origin.
 
