@@ -70,7 +70,7 @@ const todosSchema = new mongoose.Schema({
 const meals = new mongoose.model("meals", mealsSchema);
 const recipe = new mongoose.model("menu", recipeSchema);
 const topics = new mongoose.model("topics", topicsSchema);
-const sauce = new mongoose.model("meals", sauceSchema);
+const sauce = new mongoose.model("sauce", sauceSchema);
 const orders = new mongoose.model("orders", ordersSchema);
 const todos = new mongoose.model("todos", todosSchema);
 
