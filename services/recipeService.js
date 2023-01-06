@@ -1,20 +1,20 @@
 const boom = require("@hapi/boom");
-const { meals } = require("./models");
-class MealsService {
+const { menu } = require("./models");
+class MenuService {
     //Create One
     async create(req, res, next){
         try{
-            const data = await meals.find({name: req.body.name});
-            const newMeal = new meals(req.body);
-            const match = data.filter((item) => item.name.toLowerCase() == newMeal.name.toLowerCase());
+            const data = await menu.find({name: req.body.name});
+            const newMenu = new menu(req.body);
+            const match = data.filter((item) => item.name.toLowerCase() == newMenu.name.toLowerCase());
             if(match!=""){
                 throw boom.conflict("Already Exist", match);
             }else{
-                newMeal.save();
+                newMenu.save();
                 res.status(201)
                     .json({
                         message: "Created",
-                        data: newMeal,
+                        data: newMenu,
                     });
             }
         }catch(err){
@@ -25,7 +25,7 @@ class MealsService {
     //Get All
     async find(req, res, next){
         try{
-            const list = await meals.find();
+            const list = await menu.find();
             res.status(200)
                 .json({
                     message: "Succeed",
@@ -40,14 +40,14 @@ class MealsService {
     //Get One by Id
     async findOne(req, res, next){
         try{
-            const meal = await meals.findById(req.params.id);
-            if(meal == null){
+            const data = await menu.findById(req.params.id);
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: meal,
+                    data: data,
                 });
         }catch(err){
             err.serviceError = true;
@@ -59,14 +59,14 @@ class MealsService {
     //Update One
     async update(req, res, next){
         try{
-            const meal = await meals.findByIdAndUpdate(req.params.id, req.body);
-            if(meal == null){
+            const data = await menu.findByIdAndUpdate(req.params.id, req.body);
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: meal,
+                    data: data,
                 });     
         }catch(err){
             err.serviceError = true;
@@ -78,14 +78,14 @@ class MealsService {
 
     async delete(req, res, next){
         try{
-            const meal = await meals.findOneAndDelete({_id: req.params.id});
-            if(meal == null){
+            const data = await menu.findOneAndDelete({_id: req.params.id});
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Deleted",
-                    data: meal
+                    data: data
                 });
         }catch(err){
             err.serviceError = true;
@@ -97,7 +97,7 @@ class MealsService {
 
     async filter(req, res, next){
         try{
-            const list = await meals.find(req.query);
+            const list = await menu.find(req.query);
             if(list == null){
                 throw boom.notFound("Not found");
             }
@@ -113,4 +113,4 @@ class MealsService {
     }
 }
 
-module.exports = MealsService;
+module.exports = MenuService;

@@ -40,12 +40,6 @@ class OrdersServices {
             next(err)
         }
     }
-    update(){
-
-    }
-    delete(){
-
-    }
 }
 
 module.exports = { OrdersServices };

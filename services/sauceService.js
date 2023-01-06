@@ -1,88 +1,103 @@
 const boom = require("@hapi/boom");
-const { drinks } = require("./models");
-class DrinksService {
-    create(req, res, next){
+const { sauce } = require("./models");
+class SauceService {
+    //Create One
+    async create(req, res, next){
         try{
-            const newDrink = new drinks(req.body);
-            newDrink.save();
-            res.status(201)
-                .json({
-                    message: "Created",
-                    data: newDrink,
-                });
+            const data = await sauce.find({name: req.body.name});
+            const newSauce = new topics(req.body);
+            const match = data.filter((item) => item.name.toLowerCase() == newSauce.name.toLowerCase());
+            if(match!=""){
+                throw boom.conflict("Already Exist", match);
+            }else{
+                newTopic.save();
+                res.status(201)
+                    .json({
+                        message: "Created",
+                        data: newSauce,
+                    });
+            }
         }catch(err){
+            err.serviceError = true;
             next(err)
         }
     }
-
+    //Get All
     async find(req, res, next){
         try{
-            const list = await drinks.find();
-            if(list == null){
-                boom.notFound("Not Found");
-            }
+            const list = await sauce.find();
             res.status(200)
                 .json({
                     message: "Succeed",
                     data: list,
                 });
         }catch(err){
+            err.serviceError = true;
             next(err)
         }
     }
 
+    //Get One by Id
     async findOne(req, res, next){
         try{
-            const drink= await drinks.findById(req.params.id);
-            if(drink == null){
+            const data = await sauce.findById(req.params.id);
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: drink,
+                    data: data,
                 });
         }catch(err){
-            next(err)
+            err.serviceError = true;
+            next(err);
         }
     }
 
-    
+
+    //Update One
     async update(req, res, next){
         try{
-            const drink = await drinks.findByIdAndUpdate(req.params.id, req.body);
-            if(drink == null){
+            const data = await sauce.findByIdAndUpdate(req.params.id, req.body);
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: drink,
+                    data: data,
                 });     
         }catch(err){
+            err.serviceError = true;
             next(err)
         }
     }
     
+    //Delete One
+
     async delete(req, res, next){
         try{
-            const drink = await drinks.findOneAndDelete({_id: req.params.id});
-            if(drink == null){
+            const data = await sauce.findOneAndDelete({_id: req.params.id});
+            if(data == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Deleted",
-                    data: drink
+                    data: data
                 });
         }catch(err){
+            err.serviceError = true;
             next(err)
         }
     }
     
+    //Filter
+
     async filter(req, res, next){
         try{
-            const list = await drinks.find(req.query);
+            const list = await sauce.find(req.query);
             if(list == null){
                 throw boom.notFound("Not found");
             }
@@ -92,9 +107,10 @@ class DrinksService {
                     data: list,
                 })
         }catch(err){
+            err.serviceError = true;
             next(err)
         }
     }
 }
 
-module.exports = DrinksService;
+module.exports = SauceService;
