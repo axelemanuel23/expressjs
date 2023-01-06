@@ -1,4 +1,4 @@
-//EndPoint /meals
+//EndPoint /topics
 
 const express = require("express");
 const TopicsService = require("../services/topicsService");
