@@ -1,20 +1,20 @@
 const boom = require("@hapi/boom");
-const { topics } = require("./models");
-class TopicsService {
+const { users } = require("./models");
+class UsersService {
     //Create One
     async create(req, res, next){
         try{
-            const data = await topics.find({name: req.body.name});
-            const newTopic = new topics(req.body);
-            const match = data.filter((item) => item.name.toLowerCase() == newTopic.name.toLowerCase());
+            const data = await users.find({name: req.body.name});
+            const newUser = new users(req.body);
+            const match = data.filter((item) => item.name.toLowerCase() == newUser.name.toLowerCase());
             if(match!=""){
                 throw boom.conflict("Already Exist", match);
             }else{
-                newTopic.save();
+                newUser.save();
                 res.status(201)
                     .json({
                         message: "Created",
-                        data: newTopic,
+                        data: newUser,
                     });
             }
         }catch(err){
@@ -25,7 +25,7 @@ class TopicsService {
     //Get All
     async find(req, res, next){
         try{
-            const list = await topics.find();
+            const list = await users.find();
             res.status(200)
                 .json({
                     message: "Succeed",
@@ -40,14 +40,14 @@ class TopicsService {
     //Get One by Id
     async findOne(req, res, next){
         try{
-            const topic = await topics.findById(req.params.id);
-            if(topic == null){
+            const user = await users.findById(req.params.id);
+            if(user == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: topic,
+                    data: user,
                 });
         }catch(err){
             err.serviceError = true;
@@ -59,14 +59,14 @@ class TopicsService {
     //Update One
     async update(req, res, next){
         try{
-            const topic = await topics.findByIdAndUpdate(req.params.id, req.body);
-            if(topic == null){
+            const user = await users.findByIdAndUpdate(req.params.id, req.body);
+            if(user == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Succeed",
-                    data: topic,
+                    data: user,
                 });     
         }catch(err){
             err.serviceError = true;
@@ -78,14 +78,14 @@ class TopicsService {
 
     async delete(req, res, next){
         try{
-            const topic = await topics.findOneAndDelete({_id: req.params.id});
-            if(topic == null){
+            const user = await users.findOneAndDelete({_id: req.params.id});
+            if(user == null){
                 throw boom.notFound("Not found");
             }
             res.status(200)
                 .json({
                     message: "Deleted",
-                    data: topic
+                    data: user
                 });
         }catch(err){
             err.serviceError = true;
@@ -97,7 +97,7 @@ class TopicsService {
 
     async filter(req, res, next){
         try{
-            const list = await topics.find(req.query);
+            const list = await users.find(req.query);
             if(list == null){
                 throw boom.notFound("Not found");
             }
@@ -113,4 +113,4 @@ class TopicsService {
     }
 }
 
-module.exports = TopicsService;
+module.exports = UsersService;

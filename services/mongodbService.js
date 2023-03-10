@@ -8,14 +8,8 @@ const dbPass = encodeURIComponent(config.dbPass);
 const dbCluster = config.dbCluster;
 
 const uri = `mongodb+srv://${dbUser}:${dbPass}@${dbCluster}/?retryWrites=true&w=majority`;
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName});
 
-async function connection(dbName){
-        try{
-                await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName});
-                console.log("Database Connected!");
-        }catch(err){
-                console.log("Error al intentar conectarse a la base de datos");
-        }
-}
+const connection = mongoose.connection;
 
 module.exports = { connection };

@@ -1,10 +1,10 @@
-//EndPoint /topics
+//EndPoint
 
 const express = require("express");
-const TopicsService = require("../services/topicsService");
+const UsersService = require("../services/usersService");
 
 const router = express.Router();
-const service = new TopicsService();
+const service = new UsersService();
 
 router.get("/", (req, res, next) => {
      service.find(req, res, next);

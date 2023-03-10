@@ -1,77 +1,24 @@
-const mongoose = require("mongoose");
-const { connection } = require("../services/mongodbService");
-connection("cook");
+const { model, Schema } = require("mongoose");
+const { connection } = require("./mongodbService");
+connection.once("works");
 
 //Meal es la base de la receta ej: hamburguesa
-const mealsSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: String,
-  basePrice: Number,
-  healthFilter: {
-    meat: Boolean,
-    dairy: Boolean,
-    flavour: Boolean,
-  },
-  ingredients: Array,
+  email: String
 });
 
 //Topic son los aditivos que se le pueden agregar, ej: bacon, queso, huevo, jamon
-const topicsSchema = new mongoose.Schema({
-  mealsId: Array,
-  name: String,
-  price: Number,
-  available: Boolean,
-  healthFilter: {
-    meat: Boolean,
-    dairy: Boolean,
-    flavour: Boolean,
-  },
-  ingredients: Array,
-})
-
-//Son las salsas disponibles
-const sauceSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  available: Boolean,
-  healthFilter: {
-    meat: Boolean,
-    dairy: Boolean,
-    flavour: Boolean,
-  },
-  ingredients: Array,
-})
-
-//Es el pedido armado de una receta
-const recipeSchema = new mongoose.Schema({
-  mealId: Number,
-  topics: {
-    topicId: Number,
-    quantity: Number,
-  },
-  sauce: {
-    sauceId: Number,
-    quantity: Number,
-  },
-  total: Number,
-});
-
-const ordersSchema = new mongoose.Schema({
-  orderNumber: Number,
-  menuList: Array,
-  total: Number,
+const workSchema = new Schema({
+  user: String,
+  receptionDate: Date,
+  isWorking: boolean,
+  deliveryDate: Date,
+  price: float
 })
 
 
-const todosSchema = new mongoose.Schema({
-  text: String,
-  completed: Boolean
-})
+const users = new model("users", userSchema);
+const works = new model("works", workSchema);
 
-const meals = new mongoose.model("meals", mealsSchema);
-const recipe = new mongoose.model("menu", recipeSchema);
-const topics = new mongoose.model("topics", topicsSchema);
-const sauce = new mongoose.model("sauce", sauceSchema);
-const orders = new mongoose.model("orders", ordersSchema);
-const todos = new mongoose.model("todos", todosSchema);
-
-module.exports = { meals , topics, sauce, orders, todos, recipe };
+module.exports = { users, works };
